@@ -1,0 +1,219 @@
+<!DOCTYPE html> 
+<html> 
+	<head> 
+		<title>Dice</title>i
+		<meta charset="UTF-8">
+		<link rel="stylesheet" href="css/jquery.mobile-1.3.1.nohover.css" />
+		<script src="js/jquery-1.10.1.js""></script>
+		<script src="js/models.js"></script>
+		<script src="js/jqm-ui.js"></script>
+		<script src="js/jquery.mobile-1.3.1.js"></script>
+		<!-- <script src="jqm/visualize.jQuery.js"></script> -->
+		<style>
+			BODY { background-color: #000;  }
+			.keyblock > div > a { height: 55px; -webkit-tap-highlight-color: rgba(0,0,0,0); /* font-size: 18pt; Add for more rounded buttons */ }
+			.keyblock > div > a > span { margin-left: -3px;  font-size: 18pt }
+			#xvalueBox { padding: 5px; padding-left: 10pt; font-size: 18pt; margin-top: -10px; overflow: hidden }
+			#valueBox { font-size: 18pt; padding: 3px; }
+
+			#calcKeyC { position: absolute; top:50%; right: 0px; margin-right: 10px; margin-top: -12px; } 
+			.ui-icon-roll {
+				background-image: url("icon-roll.png");
+			}
+			.ui-header .ui-title {
+				margin-right:20px;
+				margin-left:20px;
+			}
+			.ui-footer .ui-title {
+				margin-right:20px;
+				margin-left:20px;
+				white-space:normal; 
+			}
+
+			.ui-dialog.fromtop .ui-dialog-contain { margin-top: 0 }
+
+			.ui-mobile .ui-dialog-background { display: block; }
+			::-webkit-scrollbar { width: 0px; }	
+			
+			.ui-dialog-background {
+				opacity: 0.95;
+				display: block !important;
+			}
+			 
+			.ui-dialog-background.pop.in {
+				opacity: 1;
+			}
+			 
+			.ui-dialog {
+				min-height: 100% !important;
+				background: transparent !important;
+			}
+
+
+		</style>
+
+		<!-- IPHONE STUFF -->
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no" />
+		<meta name="viewport" content="initial-scale=1.0,user-scalable=no,maximum-scale=1" media="(device-height: 568px)" />
+	</head> 
+	<body><div id="container"> 
+		<div data-role="page" id="calc" data-dom-cache="true">
+
+			<div data-role="header">
+				<!-- <a href="#options" class="ui-btn-right" data-theme="b" data-transition="flip" data-icon="gear" data-iconpos="notext">Options</a> -->
+				<h1>Mr.Dice</h1>
+				<a id="loadButton" class="ui-btn-right" href="#presets" data-transition="flow" data-theme="b" data-icon="arrow-r" data-iconpos="right">Load</a>
+				
+			</div><!-- /header -->
+
+			<div data-role="content" style="padding: 5px;">
+				<!-- <div id="valueBox" class="ui-corner-all ui-shadow-inset">&nbsp;</div> -->
+				<div style="position: relative; margin-left: 5px">
+				<label for="valueBox" class="ui-hidden-accessible">Result:</label>
+				<input type="text" readonly name="valueBox" id="valueBox" data-theme="c" value="" data-icon="refresh" />
+				<a href="#" id="calcKeyC" data-role="button" data-icon="delete" data-iconpos="notext" style="display: none">Delete</a>
+				</div>
+				<div class="ui-grid-c keyblock">
+					<div class="ui-block-c"><a id="calcKey7" href="#" data-role="button">7</a></div>
+					<div class="ui-block-c"><a id="calcKey8" href="#" data-role="button">8</a></div>
+					<div class="ui-block-c"><a id="calcKey9" href="#" data-role="button">9</a></div>
+					<!--<div class="ui-block-c"><a id="calcKeyS" href="#" data-role="button" data-theme="e">C</a></div>-->
+					<div class="ui-block-c"><a id="calcKeyX" href="#" data-role="button" data-theme="e">&larr;</a></div>
+					<div class="ui-block-c"><a id="calcKey4" href="#" data-role="button">4</a></div>
+					<div class="ui-block-c"><a id="calcKey5" href="#" data-role="button">5</a></div>
+					<div class="ui-block-c"><a id="calcKey6" href="#" data-role="button">6</a></div>
+					<div class="ui-block-c"><a id="calcKeyFX" href="#functionDialog" data-transition="slide" data-role="button" data-theme="b">&fnof;</a></div>
+					<div class="ui-block-c"><a id="calcKey1" href="#" data-role="button">1</a></div>
+					<div class="ui-block-c"><a id="calcKey2" href="#" data-role="button">2</a></div>
+					<div class="ui-block-c"><a id="calcKey3" href="#" data-role="button">3</a></div>
+					<div class="ui-block-c"><a id="calcKeyS" href="#" data-rel="dialog" data-transition="slidedown" data-role="button" data-theme="b">S</a></div>
+					<div class="ui-block-c"><a id="calcKeyd" href="#" data-role="button" data-theme="b">d</a></div>
+					<div class="ui-block-c"><a id="calcKey0" href="#" data-role="button">0</a></div>
+					<!-- <div class="ui-block-c"><a id="calcKeyX" href="#" data-role="button" data-theme="b">&#10076;</a></div> -->
+					<!-- <div class="ui-block-c"><a id="calcKeyX" href="#" data-role="button" data-theme="b">&larr;</a></div> -->
+					<div class="ui-block-c"><a id="calcKeyPM" href="#" data-role="button" data-theme="b">&plusmn;</a></div>
+
+					<div class="ui-block-c"><a id="calcKeyEQ" href="#" data-role="button" data-theme="b">=</a></div>
+
+				</div>
+			</div><!-- /content -->
+			<!-- <div data-role="footer" data-id="savebar" data-position="fixed" class="ui-bar">
+			</div> -->
+		</div><!-- /page -->
+		<div data-role="page" id="options"  data-add-back-btn="true">
+
+			<div data-role="header">
+				<a href="#calc" data-role="button" data-rel="back" data-icon="back">Back</a>
+				<h1>My Title</h1>
+			</div><!-- /header -->
+
+			<div data-role="content">
+				<form>	
+					<div data-role="collapsible-set">
+						<div data-role="collapsible"  data-collapsed="false">
+							<h3>Help</h3>
+							<p>You're pretty much on your own for now.</p>
+						</div>
+						<div data-role="collapsible">
+							<h3>Display Options</h3>
+								   <input type="checkbox" name="optionRaw" id="optionRaw" class="custom" />
+								   <label for="optionRaw">Raw Output</label>
+								   <input type="checkbox" name="optionShowCmd" id="optionShowCmd" class="custom" />
+								   <label for="optionShowCmd">Show Command</label>
+								   <input type="checkbox" name="optionShowPreEval" id="optionShowPreEval" class="custom" checked />
+								   <label for="optionShowPreEval">Show Adding</label>
+							
+						</div>
+						<div data-role="collapsible">
+							<h3>Storage</h3>
+							<a data-role="button" id="clearStorage" data-theme="e" data-icon="alert">Clear Storage</a>
+						</div>
+
+					</div>
+				</form>
+			</div><!-- /content -->
+		</div><!-- /page -->
+		<div data-role="page" id="presets" data-add-back-btn="true" data-dom-cache="true">
+			<div data-role="header" data-position="fixed">
+				<a id="presetsBack" href="#calc" data-role="button" data-icon="back">Back</a>
+				<h1>Load</h1>
+			</div><!-- /header -->
+
+			<div data-role="content">
+				<ul id="rolllist" data-role="listview" data-filter="true" data-split-icon="grid" data-count-theme="d" data-split-theme="b">
+				</ul>
+			</div><!-- /content -->
+			</div><!-- /page -->
+			<div data-role="page" id="functionDialog" data-postion="fixed">
+				<div data-position="fixed" data-role="header">
+					<a id="functionBack" href="#calc" data-icon="arrow-l" data-transition="slideup">Back</a>
+					<h1>Functions</h1>
+				</div><!-- /header -->
+
+				<div data-role="content">
+					<ul data-role="listview" data-filter="true" id="funclist">
+						<li data-role="list-divider">Drop Dice</li>
+						<li><a data-rel="back" data-func="dropLow" href="#">Drop Lowest</a></li>
+						<li><a data-rel="back" data-func="dropHigh" href="#">Drop Highest</a></li>
+						<li><a data-rel="back" data-func="bestof" href="#">Best Of</a></li>
+						<li><a data-rel="back" data-func="worstof" href="#">Worst Of</a></li>
+						<li data-role="list-divider">Extra Dice</li>
+						<li><a data-rel="back" data-func="open" href="#">Open</a></li>
+						<li><a data-rel="back" data-func="close" href="#">Close</a></li>
+						<li data-role="list-divider">Compare</li>
+						<li><a data-rel="back" data-func="hit" href="#">Hit</a></li>
+						<li data-role="list-divider">Misc.</li>
+						<li><a data-rel="back" data-func="mul" href="#">Multiply</a></li>
+						<!-- <li><a data-rel="back" data-func="monty" href="#">Simulate</a></li> -->
+					</ul>
+				</div><!-- /content -->
+			</div><!-- /page -->
+			<div data-role="page" id="chartDialog" data-add-back-btn="true">
+				<div data-role="header">
+					<h1>Functions</h1>
+				</div><!-- /header -->
+
+				<div data-role="content">
+					<table id="testtb">
+					<thead><th>Value</th></thead>
+					<tbody>
+					<tr><th>1</th><td>5</td></tr>
+					<tr><th>2</th><td>23</td></tr>
+					<tr><th>3</th><td>100</td></tr>
+					<tr><th>4</th><td>41</td></tr>
+					<tr><th>5</th><td>20</td></tr>
+					<tr><th>6</th><td>5</td></tr>
+					</tbody></table>
+				</div><!-- /content -->
+			</div><!-- /page -->
+			<div data-role="page" id="save" data-transition="none" class="fromtop">
+  				<div data-role="content">
+  					<h2>Save This Roll</h2>
+  					<inpt type="hidden" id="savewhat"></input>
+    				<input type="text" name="name" id="savename" value="" />
+    				<a href="#" data-role="button" data-inline="true" data-rel="back">Cancel</a>
+					<a href="#" data-role="button" data-inline="true" data-theme="b" id="saveroll">Save</a>
+  				</div>
+			</div>
+			<div data-role="page" id="delete" data-transition="none" class="fromtop">
+  				<div data-role="content">
+  					<h2>Delete Roll</h2>
+  					<a href="#" data-role="button" data-theme="b" id="deleteroll">Delete</a>
+    				<a href="#" data-role="button" data-rel="back">Cancel</a>
+					
+  				</div>
+			</div>
+			<div data-role="page" id="popcalc">
+				<div data-role="header"><h2>Roll Result</h2></div>
+  				<div data-role="content">
+  					<h1 id="poptext" style="text-align:center"></h1>
+  					<inpt type="hidden" id="popcalcwhat"></input>
+  					<a href="#" data-role="button" data-rel="back" data-icon="check">Okay</a>
+  					<a href="#" data-role="button" id="popreroll" data-icon="refresh" data-theme="e">Reroll</a>
+					<a href="#" data-role="button" data-theme="b" id="popedit" data-icon="edit">Edit</a>
+  				</div>
+			</div>
+		</container></body>
+	</html>
+
